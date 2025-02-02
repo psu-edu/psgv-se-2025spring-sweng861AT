@@ -8,19 +8,18 @@ A RESTful API that fetches Harry Potter book data, stores it in SQLite, and prov
 - Data validation
 - API documentation (Swagger)
 - Error handling and basic security
-- Unit testing
 
 ## Tech Stack
-Node.js, Express, SQLite3, Axios, Joi, Swagger UI, Jest, Supertest
+Node.js, Express, SQLite3, Axios, Joi, Swagger UI
 
 ## Quick Start
-1. Clone: `git clone https://github.com/yourusername/harry-potter-books-api.git`
-2. Install: `npm install`
-3. Run: `npm start`
-4. Test: `npm test`
+1. Clone: `git clone https://github.com/psu-edu/psgv-se-2025spring-sweng861AT.git`
+2. cd `/Sweg861/week3/backend-development`
+3. Install: `npm install`
+4. Run: `npm start`
 
 ## API Endpoints
-- `POST /api/books/fetch`: Fetch and store books
+- `POST /api/books/fetch`: Fetch and store books in sqlite database
 - `GET /api/books`: Get all books
 - `GET /api/books/:number`: Get book by number
 - `PUT /api/books/:number`: Update book
