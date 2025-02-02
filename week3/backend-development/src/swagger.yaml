@@ -1,0 +1,143 @@
+openapi: 3.0.0
+info:
+  title: Harry Potter Books API
+  version: 1.0.0
+  description: API for fetching and managing Harry Potter book data
+paths:
+  /api/books/fetch:
+    post:
+      summary: Fetch and store book data from Potter API
+      responses:
+        '201':
+          description: Books fetched and stored successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  books:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Book'
+  /api/books:
+    get:
+      summary: Get all books
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+  /api/books/{number}:
+    get:
+      summary: Get book by number
+      parameters:
+        - in: path
+          name: number
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '404':
+          description: Book not found
+    put:
+      summary: Update book data
+      parameters:
+        - in: path
+          name: number
+          required: true
+          schema:
+            type: integer
+          description: The number of the book to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/BookInput'
+                - not:
+                    type: object
+                    properties:
+                      number:
+                        type: integer
+      responses:
+        '200':
+          description: Book updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '400':
+          description: Invalid input
+        '404':
+          description: Book not found
+    delete:
+      summary: Delete book
+      parameters:
+        - in: path
+          name: number
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Book deleted successfully
+        '404':
+          description: Book not found
+
+components:
+  schemas:
+    Book:
+      type: object
+      properties:
+        title:
+          type: string
+        originalTitle:
+          type: string
+        releaseDate:
+          type: string
+        description:
+          type: string
+        pages:
+          type: integer
+        cover:
+          type: string
+        book_index:
+          type: integer
+    BookInput:
+      type: object
+      properties:
+        title:
+          type: string
+        originalTitle:
+          type: string
+        releaseDate:
+          type: string
+        description:
+          type: string
+        pages:
+          type: integer
+        cover:
+          type: string
+        index:
+          type: integer
+      required:
+        - title
+        - originalTitle
+        - releaseDate
+        - description
+        - pages
+        - cover
+        - index
