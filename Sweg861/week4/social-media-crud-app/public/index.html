@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google SignIn or Register For CRUD App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        #login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #user-info, #book-manager {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: none;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #logout-button {
+            background-color: #f44336;
+        }
+        #logout-button:hover {
+            background-color: #d32f2f;
+        }
+        #book-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        #book-list li {
+            background: #f9f9f9;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        #book-details, #update-form {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        input, textarea {
+            display: block;
+            margin-bottom: 10px;
+            width: 100%;
+            padding: 5px;
+        }
+        .register-button {
+            background-color: #ffffff;
+            color: black;
+            border: 1px solid #dadce0;
+            padding: 10px 20px;
+            margin-top: 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            height: 40px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+        .register-button:hover {
+            background-color: rgb(232, 252, 232);
+        }
+    </style>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+    <div class="container">
+        <div id="login-container">
+            <h1>Google SignIn or Register For CRUD App</h1>&nbsp;&nbsp;
+            <div id="g_id_onload"
+                data-client_id="564507615020-5a6gc9r1qn4sp1qjontrjh214list2bn.apps.googleusercontent.com"
+                data-callback="handleCredentialResponse">
+            </div>
+            <div class="g_id_signin" data-type="standard"></div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button onclick="window.location.href='/register.html'" class="register-button">Register</button>
+            </div>
+        
+        <div id="user-info">
+            <h3>User Info</h3>
+            <p id="user-name"></p>
+            <p id="user-email"></p>
+            <button id="logout-button">Logout</button>
+        </div>
+        <div id="book-manager">
+            <h2>Harry Potter Book Manager</h2>
+            <button id="fetch-books">Fetch and Store Books</button>
+            <button id="get-all-books">Get All Books</button>
+            <button id="get-book">Get Book by Number</button>
+            <button id="update-book">Update Book</button>
+            <button id="delete-book">Delete Book</button>
+            <div id="content-display"></div>
+        </div>            
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
