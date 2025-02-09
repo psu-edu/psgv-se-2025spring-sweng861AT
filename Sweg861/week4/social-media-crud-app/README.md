@@ -4,8 +4,8 @@ This is a React application that interacts with two separate Node.js servers.
 ## Overview
 This React application communicates with two separate Node.js servers:
 
-1. **Authentication Server**: Handles user authentication and authorization.
-2. **Data Server**: Manages data operations and business logic.
+**Authentication Server**: Handles user authentication and authorization.
+**Data Server**: Manages data operations and business logic.
 
 ## Prerequisites
 Before you begin, ensure you have met the following requirements:
@@ -20,6 +20,7 @@ Before starting the React app, you need to ensure that both Node.js servers are 
 Both of the servers along with the react app is in the same git repo:
 git clone https://github.com/psu-edu/psgv-se-2025spring-sweng861AT.git
 
+
 1. Start the Authentication Server:
 
 Navigate to the authentication server folder: cd Sweg861/social-login-app/
@@ -29,6 +30,7 @@ Install dependencies: npm install
 Start the server: npm start
 
 README.md page for authentication server: https://github.com/psu-edu/psgv-se-2025spring-sweng861AT/blob/main/Sweg861/social-login-app/public/README.md
+
 
 2. Start the Data Server:
    
@@ -42,6 +44,7 @@ README.md page for data server: https://github.com/psu-edu/psgv-se-2025spring-sw
 
 Make sure both servers are running on their respective ports (8080 for Auth Server and 8000 for Data Server).
 
+
 3. Start the React development server:
    
 Navigate to the react folder: cd Sweg861/week4/social-media-crud-app/
@@ -50,7 +53,8 @@ Install dependencies: npm install
 
 Start the server: npm start
 
-5. Open your browser and visit `http://localhost:3000`
+
+4. Open your browser and visit `http://localhost:3000`
 
 ## API Documentation
 ### Authentication Server
