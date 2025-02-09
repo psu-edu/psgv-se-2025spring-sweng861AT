@@ -23,7 +23,9 @@ git clone https://github.com/psu-edu/psgv-se-2025spring-sweng861AT.git
 1. Start the Authentication Server:
 
 Navigate to the authentication server folder: cd Sweg861/social-login-app/
+
 Install dependencies: npm install
+
 Start the server: npm start
 
 README.md page for authentication server: https://github.com/psu-edu/psgv-se-2025spring-sweng861AT/blob/main/Sweg861/social-login-app/public/README.md
@@ -31,7 +33,9 @@ README.md page for authentication server: https://github.com/psu-edu/psgv-se-202
 2. Start the Data Server:
    
 Navigate to the data server for harry potter book APIs: cd Sweg861/week3/backend-development/
+
 Install dependencies: npm install
+
 Start the server: npm start
 
 README.md page for data server: https://github.com/psu-edu/psgv-se-2025spring-sweng861AT/blob/main/Sweg861/week3/backend-development/README.md
@@ -41,7 +45,9 @@ Make sure both servers are running on their respective ports (8080 for Auth Serv
 3. Start the React development server:
    
 Navigate to the react folder: cd Sweg861/week4/social-media-crud-app/
+
 Install dependencies: npm install
+
 Start the server: npm start
 
 5. Open your browser and visit `http://localhost:3000`
