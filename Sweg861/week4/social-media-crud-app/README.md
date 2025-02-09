@@ -5,6 +5,7 @@ This is a React application that interacts with two separate Node.js servers.
 This React application communicates with two separate Node.js servers:
 
 **Authentication Server**: Handles user authentication and authorization.
+
 **Data Server**: Manages data operations and business logic.
 
 ## Prerequisites
