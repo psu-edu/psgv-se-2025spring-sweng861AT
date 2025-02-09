@@ -6,6 +6,13 @@ const YAML = require('yamljs');
 const bookRoutes = require('./routes/bookRoutes');
 const app = express();
 
+// CORS configuration
+const corsOptions = {
+  origin: ['http://localhost:8000', 'http://localhost:3001', 'http://localhost:3000'],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
 // Middleware to simulate HTTPS enforcement
 const simulateHTTPS = (req, res, next) => {
   // Simulate HTTPS enforcement
@@ -17,8 +24,8 @@ const simulateHTTPS = (req, res, next) => {
 // Middleware to ensure the correct domain
 const ensureCorrectDomain = (req, res, next) => {
   const host = req.get('host');
-  if (host !== 'localhost:3001') {
-    return res.status(400).send('Please use localhost:3001');
+  if (host !== 'localhost:8000' && host !== 'localhost:3001' && host !== 'localhost:3000') {
+    return res.status(400).send('Please use localhost:8000 || localhost:3001 || localhost:3000');
   }
   next();
 }
@@ -27,7 +34,7 @@ const ensureCorrectDomain = (req, res, next) => {
 app.use(simulateHTTPS);
 app.use(ensureCorrectDomain);
 
-app.use(cors());
+app.use(cors(corsOptions)); // Use the CORS configuration
 app.use(helmet());
 app.use(express.json());
 
@@ -37,7 +44,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/books', bookRoutes);
 
 const HOST = 'localhost';
-const PORT = 3001;
+const PORT = 8000;
 
 app.listen(PORT, HOST, () => {
   console.log(`Server running on http://${HOST}:${PORT}`);

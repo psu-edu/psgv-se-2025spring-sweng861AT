@@ -3,10 +3,17 @@ const { OAuth2Client } = require('google-auth-library');
 const path = require('path');
 const session = require('express-session');
 const sqlite3 = require('sqlite3').verbose();
+const cors = require('cors');
 
 const app = express();
-const PORT = 3000;
+const PORT = 8080;
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+// CORS configuration
+app.use(cors({
+  origin: ['http://localhost:8000', 'http://localhost:8080', 'http://localhost:3001', 'http://localhost:3000'],
+  credentials: true
+}));
 
 // SQLite database setup
 const db = new sqlite3.Database('./psuLogin.db', (err) => {
@@ -29,8 +36,12 @@ app.use(express.static('public'));
 app.use(session({
   secret: 'your_session_secret',
   resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false } // Set to true if using https
+  saveUninitialized: false,
+  cookie: { 
+    secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+    httpOnly: true,
+    sameSite: process.env.NODE_ENV === "production" ? 'none' : 'lax' // Adjust SameSite attribute
+  }
 }));
 
 app.get('/', (req, res) => {
@@ -102,10 +113,10 @@ app.post('/logout', (req, res) => {
       req.session.destroy((err) => {
         if (err) {
           console.error('Error destroying session:', err);
-          res.status(500).json({ status: 'error', message: 'Failed to logout' });
-        } else {
-          res.json({ status: 'success', message: 'Logged out successfully' });
+          return res.status(500).json({ status: 'error', message: 'Failed to logout' });
         }
+        res.clearCookie('connect.sid'); // Clear the session cookie
+        res.json({ status: 'success', message: 'Logged out successfully' });
       });
     });
   } else {
@@ -120,6 +131,39 @@ app.get('/admin/users', (req, res) => {
     }
     res.json({ users: rows });
   });
+});
+
+// Endpoint to check if email exists
+app.get('/check-email', (req, res) => {
+  const { email } = req.query;
+  db.get('SELECT * FROM users WHERE email = ?', [email], (err, row) => {
+      if (err) {
+          console.error('Database error:', err);
+          return res.status(500).json({ status: 'error', message: 'Database error' });
+      }
+      res.json({ exists: !!row });
+  });
+});
+// Registration endpoint
+app.post('/register', (req, res) => {
+  const { email, name } = req.body;
+  const id = Date.now().toString(); // Generate a unique ID
+  const loginTime = new Date().toISOString();
+
+  db.run('INSERT INTO users (id, email, name, loginTime) VALUES (?, ?, ?, ?)',
+      [id, email, name, loginTime],
+      function(err) {
+          if (err) {
+              console.error('Error saving user:', err);
+              return res.status(500).json({ status: 'error', message: 'Failed to save user data' });
+          }
+          
+          // Set session (you'll need to implement session management)
+          req.session.userId = id;
+
+          res.json({ status: 'success', user: { id, email, name, loginTime } });
+      }
+  );
 });
 
 app.use((err, req, res, next) => {
