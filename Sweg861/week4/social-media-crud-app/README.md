@@ -1,4 +1,4 @@
-# My React App
+# Social Media CRUD App
 This is a React application that interacts with two separate Node.js servers.
 
 ## Overview
