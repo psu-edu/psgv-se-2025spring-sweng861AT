@@ -1,6 +1,4 @@
-function handleCredentialResponse(response) {
-    console.log("Encoded JWT ID token: " + response.credential);
-    
+function handleCredentialResponse(response) {    
     fetch('/auth/google', {
         method: 'POST',
         headers: {

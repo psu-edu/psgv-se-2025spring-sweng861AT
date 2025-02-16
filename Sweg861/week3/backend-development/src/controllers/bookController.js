@@ -4,9 +4,7 @@ const { validateBookUpdateData } = require('../utils/dataValidator');
 
 exports.fetchAndStoreBooks = async (req, res) => {
   try {
-    console.log('Fetching books from external API...');
     const books = await fetchBooks();
-    console.log(`Fetched ${books.length} books from API`);
 
     const savedBooks = await Promise.all(books.map(async (book) => {
       try {
@@ -16,7 +14,6 @@ exports.fetchAndStoreBooks = async (req, res) => {
           return null;
         }
         const savedBook = await Book.create(book);
-        console.log(`Saved book: ${savedBook.number} - ${savedBook.title}`);
         return savedBook;
       } catch (error) {
         console.error(`Error saving book ${book.number}:`, error);
@@ -25,7 +22,6 @@ exports.fetchAndStoreBooks = async (req, res) => {
     }));
 
     const validSavedBooks = savedBooks.filter(book => book !== null);
-    console.log(`Successfully saved ${validSavedBooks.length} out of ${books.length} books`);
 
     res.status(201).json({
       message: `${validSavedBooks.length} books fetched and stored successfully`,

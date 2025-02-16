@@ -17,22 +17,21 @@ const corsOptions = {
 const simulateHTTPS = (req, res, next) => {
   // Simulate HTTPS enforcement
   res.setHeader('X-Simulated-HTTPS', 'Enabled');
-  console.log('Simulated HTTPS enforcement');
   next();
 }
 
 // Middleware to ensure the correct domain
-const ensureCorrectDomain = (req, res, next) => {
-  const host = req.get('host');
-  if (host !== 'localhost:8000' && host !== 'localhost:3001' && host !== 'localhost:3000') {
-    return res.status(400).send('Please use localhost:8000 || localhost:3001 || localhost:3000');
-  }
-  next();
-}
+// const ensureCorrectDomain = (req, res, next) => {
+//   const host = req.get('host');
+//   if (host !== 'localhost:8000' && host !== 'localhost:3001' && host !== 'localhost:3000') {
+//     return res.status(400).send('Please use localhost:8000 || localhost:3001 || localhost:3000');
+//   }
+//   next();
+// }
 
 // Use the middlewares
 app.use(simulateHTTPS);
-app.use(ensureCorrectDomain);
+// app.use(ensureCorrectDomain);
 
 app.use(cors(corsOptions)); // Use the CORS configuration
 app.use(helmet());
@@ -43,10 +42,16 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use('/api/books', bookRoutes);
 
-const HOST = 'localhost';
-const PORT = 8000;
+// Export the app
+module.exports = app;
 
-app.listen(PORT, HOST, () => {
-  console.log(`Server running on http://${HOST}:${PORT}`);
-  console.log(`In a production environment, this would be running on HTTPS`);
-});
+// Only start the server if this file is run directly
+if (require.main === module) {
+  const HOST = 'localhost';
+  const PORT = 8000;
+
+  app.listen(PORT, HOST, () => {
+    console.log(`Server running on http://${HOST}:${PORT}`);
+    console.log(`In a production environment, this would be running on HTTPS`);
+  });
+}

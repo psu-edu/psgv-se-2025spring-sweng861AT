@@ -7,7 +7,6 @@ const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
     console.error('Error opening database', err);
   } else {
-    console.log('Connected to SQLite database');
     createTable();
   }
 });
@@ -25,8 +24,6 @@ function createTable() {
   )`, (err) => {
     if (err) {
       console.error('Error creating table', err);
-    } else {
-      console.log('Table created or already exists');
     }
   });
 }
