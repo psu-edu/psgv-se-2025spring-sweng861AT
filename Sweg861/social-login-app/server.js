@@ -37,9 +37,9 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: { 
-    secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+    secure: process.env.NODE_ENV === "production",
     httpOnly: true,
-    sameSite: process.env.NODE_ENV === "production" ? 'none' : 'lax' // Adjust SameSite attribute
+    sameSite: process.env.NODE_ENV === "production" ? 'none' : 'lax'
   }
 }));
 
@@ -49,6 +49,9 @@ app.get('/', (req, res) => {
 
 app.post('/auth/google', async (req, res) => {
   const { token } = req.body;
+  if (!token || typeof token !== 'string' || token.split('.').length !== 3) {
+    return res.status(400).json({ status: 'error', message: 'Invalid token format' });
+  }
   try {
     const ticket = await client.verifyIdToken({
       idToken: token,
@@ -60,7 +63,6 @@ app.post('/auth/google', async (req, res) => {
     const userName = payload['name'];
     const loginTime = new Date().toISOString();
 
-    // Store or update user information
     db.run(`INSERT OR REPLACE INTO users (id, email, name, loginTime) VALUES (?, ?, ?, ?)`,
       [userId, userEmail, userName, loginTime],
       (err) => {
@@ -69,15 +71,13 @@ app.post('/auth/google', async (req, res) => {
           return res.status(500).json({ status: 'error', message: 'Failed to save user data' });
         }
         
-        // Set session
         req.session.userId = userId;
-
         res.json({ status: 'success', email: userEmail, name: userName });
       }
     );
   } catch (error) {
     console.error('Error verifying token:', error);
-    res.status(400).json({ status: 'error', message: 'Invalid token' });
+    return res.status(400).json({ status: 'error', message: 'Invalid token' });
   }
 });
 
@@ -114,7 +114,7 @@ app.post('/logout', (req, res) => {
           console.error('Error destroying session:', err);
           return res.status(500).json({ status: 'error', message: 'Failed to logout' });
         }
-        res.clearCookie('connect.sid'); // Clear the session cookie
+        res.clearCookie('connect.sid');
         res.json({ status: 'success', message: 'Logged out successfully' });
       });
     });
@@ -132,44 +132,51 @@ app.get('/admin/users', (req, res) => {
   });
 });
 
-// Endpoint to check if email exists
 app.get('/check-email', (req, res) => {
   const { email } = req.query;
+  if (!email) {
+    return res.status(400).json({ status: 'error', message: 'Email parameter is required' });
+  }
   db.get('SELECT * FROM users WHERE email = ?', [email], (err, row) => {
-      if (err) {
-          console.error('Database error:', err);
-          return res.status(500).json({ status: 'error', message: 'Database error' });
-      }
-      res.json({ exists: !!row });
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).json({ status: 'error', message: 'Database error' });
+    }
+    res.json({ exists: !!row });
   });
 });
-// Registration endpoint
+
 app.post('/register', (req, res) => {
   const { email, name } = req.body;
-  const id = Date.now().toString(); // Generate a unique ID
+
+  // Check if email is provided
+  if (!email) {
+    return res.status(400).json({ status: 'error', message: 'Email is required' });
+  }
+  // Check if name is provided
+  if (!name) {
+    return res.status(400).json({ status: 'error', message: 'Name is required' });
+  }
+  
+  const id = Date.now().toString();
   const loginTime = new Date().toISOString();
 
   db.run('INSERT INTO users (id, email, name, loginTime) VALUES (?, ?, ?, ?)',
-      [id, email, name, loginTime],
-      function(err) {
-          if (err) {
-              console.error('Error saving user:', err);
-              return res.status(500).json({ status: 'error', message: 'Failed to save user data' });
-          }
-          
-          // Set session (you'll need to implement session management)
-          req.session.userId = id;
-
-          res.json({ status: 'success', user: { id, email, name, loginTime } });
+    [id, email, name, loginTime],
+    function(err) {
+      if (err) {
+        console.error('Error saving user:', err);
+        return res.status(500).json({ status: 'error', message: 'Failed to save user data' });
       }
+      
+      req.session.userId = id;
+      res.json({ status: 'success', user: { id, email, name, loginTime } });
+    }
   );
 });
 
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ status: 'error', message: 'An unexpected error occurred' });
-});
-
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+
+module.exports = { app };
