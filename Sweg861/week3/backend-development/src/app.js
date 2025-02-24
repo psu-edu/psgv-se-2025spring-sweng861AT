@@ -18,34 +18,28 @@ const simulateHTTPS = (req, res, next) => {
   next();
 }
 
-// Middleware to ensure the correct domain
-// const ensureCorrectDomain = (req, res, next) => {
-//   const host = req.get('host');
-//   if (host !== 'localhost:8000' && host !== 'localhost:3001' && host !== 'localhost:3000') {
-//     return res.status(400).send('Please use localhost:8000 || localhost:3001 || localhost:3000');
-//   }
-//   next();
-// }
-
 // Use the middlewares
 app.use(simulateHTTPS);
-// app.use(ensureCorrectDomain);
 
 app.use(cors(corsOptions)); // Use the CORS configuration
 app.use(helmet());
 app.use(express.json());
 
 const swaggerDocument = YAML.load('./src/swagger.yaml');
+// Add this new route for the root path
+app.get('/', (req, res) => {
+  res.status(200).json({
+    message: "Welcome to the Book API",
+    documentation: "/api-docs",
+    endpoints: {
+      books: "/api/books"
+    }
+  });
+});
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use('/api/books', bookRoutes);
 
 // Export the app
-const startServer = () => {
-  const PORT = process.env.PORT || 8000;
-  return app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
-};
-
-module.exports = { app, startServer };
+module.exports = { app };
