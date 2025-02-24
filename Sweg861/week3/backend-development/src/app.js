@@ -8,9 +8,7 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
-  origin: ['http://localhost:8000', 'http://localhost:3001', 'http://localhost:3000'],
-  credentials: true,
-  optionsSuccessStatus: 200
+  origin: ['*'] 
 };
 
 // Middleware to simulate HTTPS enforcement
@@ -45,12 +43,9 @@ app.use('/api/books', bookRoutes);
 // Export the app
 module.exports = app;
 
-// Only start the server if this file is run directly
-if (require.main === module) {
-  const HOST = 'localhost';
-  const PORT = 8000;
+const PORT = process.env.PORT || 8000;
 
-  app.listen(PORT, HOST, () => {
-    console.log(`Server running on http://${HOST}:${PORT}`);
-  });
-}
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
