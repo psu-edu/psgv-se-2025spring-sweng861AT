@@ -41,11 +41,11 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/books', bookRoutes);
 
 // Export the app
-module.exports = app;
+const startServer = () => {
+  const PORT = process.env.PORT || 8000;
+  return app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+};
 
-const PORT = process.env.PORT || 8000;
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-
+module.exports = { app, startServer };

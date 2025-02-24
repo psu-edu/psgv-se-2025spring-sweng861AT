@@ -1,5 +1,16 @@
 const request = require('supertest');
-const app = require('../src/app');
+const { app, startServer } = require('../src/app');
+
+let server;
+
+beforeAll((done) => {
+  server = startServer();
+  done();
+});
+
+afterAll((done) => {
+  server.close(done);
+});
 
 const expectWithLog = (response, statusCode) => {
     expect(response.statusCode).toBe(statusCode);
